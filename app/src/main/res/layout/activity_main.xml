@@ -10,8 +10,8 @@
     tools:context=".MainActivity">
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="@dimen/_100sdp"
         android:layout_gravity="center"
         android:layout_marginVertical="50dp"
         android:src="@drawable/icon" />
@@ -23,14 +23,14 @@
     <EditText
         android:inputType="textPassword"
         style="@style/edit_15"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/_10sdp"
         android:hint="Password" />
 
     <TextView
         style="@style/text_13"
         android:layout_gravity="end"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginRight="@dimen/_20sdp"
         android:text="Forgot Password?" />
 
     <Button
