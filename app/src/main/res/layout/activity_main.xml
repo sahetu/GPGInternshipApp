@@ -17,30 +17,33 @@
         android:src="@drawable/icon" />
 
     <EditText
+        android:id="@+id/main_username"
         style="@style/edit_15"
-        android:hint="Username" />
+        android:hint="@string/username" />
 
     <EditText
+        android:id="@+id/main_password"
         android:inputType="textPassword"
         style="@style/edit_15"
         android:layout_marginTop="@dimen/_10sdp"
-        android:hint="Password" />
+        android:hint="@string/password" />
 
     <TextView
         style="@style/text_13"
         android:layout_gravity="end"
         android:layout_marginTop="@dimen/_5sdp"
         android:layout_marginRight="@dimen/_20sdp"
-        android:text="Forgot Password?" />
+        android:text="@string/forgot_password" />
 
     <Button
+        android:id="@+id/main_login"
         style="@style/button_15"
         app:backgroundTint="@color/blue"
-        android:text="Login" />
+        android:text="@string/login" />
 
     <Button
         style="@style/button_15"
         app:backgroundTint="@color/yellow"
-        android:text="No Account Yet? Signup Now" />
+        android:text="@string/no_account_signup" />
 
 </LinearLayout>
