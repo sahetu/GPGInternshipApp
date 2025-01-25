@@ -13,7 +13,7 @@
         android:theme="@style/Theme.GPGInternshipApp"
         tools:targetApi="31">
         <activity
-            android:name=".HomeActivity"
+            android:name=".SpinnerListActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,10 +22,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".HomeActivity"
             android:exported="true">
-
         </activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"></activity>
 
         <meta-data
             android:name="preloaded_fonts"
