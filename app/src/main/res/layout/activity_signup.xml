@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/bg_style"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignupActivity">
+
+    <EditText
+        android:id="@+id/signup_firstname"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:hint="First Name"
+        style="@style/edit_15"/>
+
+    <EditText
+        android:id="@+id/signup_lastname"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:hint="Last Name"
+        style="@style/edit_15"/>
+
+    <EditText
+        android:inputType="textEmailAddress"
+        android:id="@+id/signup_email"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:hint="Email Id"
+        style="@style/edit_15"/>
+
+    <EditText
+        android:maxLength="10"
+        android:inputType="phone"
+        android:id="@+id/signup_contacno"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:hint="Contact No."
+        style="@style/edit_15"/>
+
+    <EditText
+        android:inputType="textPassword"
+        android:id="@+id/signup_password"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:hint="Password"
+        style="@style/edit_15"/>
+
+    <EditText
+        android:inputType="textPassword"
+        android:id="@+id/signup_retype_password"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:hint="Retype Password"
+        style="@style/edit_15"/>
+
+    <RadioGroup
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:orientation="horizontal"
+        android:id="@+id/signup_gender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:layout_weight="1"
+            android:id="@+id/signup_male"
+            android:text="Male"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <RadioButton
+            android:layout_weight="1"
+            android:id="@+id/signup_female"
+            android:text="Female"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </RadioGroup>
+
+    <CheckBox
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:id="@+id/signup_terms"
+        android:text="Terms And Conditions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/signup_button"
+        android:text="Signup"
+        app:backgroundTint="@color/yellow"
+        style="@style/button_15"/>
+
+</LinearLayout>
