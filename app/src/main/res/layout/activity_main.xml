@@ -47,4 +47,10 @@
         app:backgroundTint="@color/yellow"
         android:text="@string/no_account_signup" />
 
+    <Button
+        android:id="@+id/main_user"
+        style="@style/button_15"
+        app:backgroundTint="@color/blue"
+        android:text= "User Data With Listview" />
+
 </LinearLayout>

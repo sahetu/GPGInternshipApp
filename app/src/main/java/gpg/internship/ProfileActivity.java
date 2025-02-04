@@ -26,7 +26,7 @@ public class ProfileActivity extends AppCompatActivity {
     EditText firstName,lastName,email,contact,password,confirmPassword;
     RadioGroup gender;
     RadioButton male,female;
-    Button submit,logout,edit;
+    Button submit,logout,edit,delete;
 
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
@@ -57,6 +57,38 @@ public class ProfileActivity extends AppCompatActivity {
         submit = findViewById(R.id.profile_submit);
         logout = findViewById(R.id.profile_logout);
         edit = findViewById(R.id.profile_edit);
+        delete = findViewById(R.id.profile_delete);
+
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
+                builder.setTitle("Account Delete!");
+                builder.setIcon(R.mipmap.ic_launcher);
+                builder.setMessage("Are You Sure Want To Delete Your Account!");
+
+                builder.setPositiveButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String deleteQuery = "DELETE FROM USERS WHERE USERID='"+sp.getString(ConstantSp.USERID,"")+"'";
+                        db.execSQL(deleteQuery);
+                        sp.edit().clear().commit();
+                        Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+
+                builder.show();
+            }
+        });
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,6 +175,19 @@ public class ProfileActivity extends AppCompatActivity {
                     Toast.makeText(ProfileActivity.this, "Please Select Gender", Toast.LENGTH_SHORT).show();
                 }
                 else{
+                    String updateQuery = "UPDATE USERS SET FIRSTNAME='"+firstName.getText().toString()+"',LASTNAME='"+lastName.getText().toString()+"',EMAIL='"+email.getText().toString()+"',CONTACT='"+contact.getText().toString()+"',PASSWORD='"+password.getText().toString()+"',GENDER='"+sGender+"' WHERE USERID='"+sp.getString(ConstantSp.USERID,"")+"'";
+                    db.execSQL(updateQuery);
+                    Toast.makeText(ProfileActivity.this, "Profile Update Successfully", Toast.LENGTH_SHORT).show();
+
+                    sp.edit().putString(ConstantSp.FIRSTNAME,firstName.getText().toString()).commit();
+                    sp.edit().putString(ConstantSp.LASTNAME,lastName.getText().toString()).commit();
+                    sp.edit().putString(ConstantSp.EMAIL,email.getText().toString()).commit();
+                    sp.edit().putString(ConstantSp.CONTACT,contact.getText().toString()).commit();
+                    sp.edit().putString(ConstantSp.PASSWORD,password.getText().toString()).commit();
+                    sp.edit().putString(ConstantSp.GENDER,sGender).commit();
+
+                    setData(false);
+
                     /*String selectQuery = "SELECT * FROM USERS WHERE EMAIL='"+email.getText().toString()+"' OR CONTACT='"+contact.getText().toString()+"'";
                     Cursor cursor = db.rawQuery(selectQuery,null);
                     if(cursor.getCount()>0){

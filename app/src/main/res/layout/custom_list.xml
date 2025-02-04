@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/_5sdp"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/custom_list_name"
+        style="@style/text_13_match_bold"/>
+
+    <TextView
+        android:id="@+id/custom_list_email"
+        style="@style/text_13_match"/>
+
+    <TextView
+        android:id="@+id/custom_list_contact"
+        style="@style/text_13_match"/>
+
+</LinearLayout>

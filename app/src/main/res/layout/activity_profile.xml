@@ -91,4 +91,10 @@
         app:backgroundTint="@android:color/holo_red_dark"
         style="@style/button_15"/>
 
+    <Button
+        android:id="@+id/profile_delete"
+        android:text="Account Delete"
+        app:backgroundTint="@android:color/holo_red_light"
+        style="@style/button_15"/>
+
 </LinearLayout>
