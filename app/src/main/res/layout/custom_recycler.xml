@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/_200sdp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="@dimen/_5sdp"
+    app:cardElevation="@dimen/_3sdp"
+    android:layout_marginVertical="@dimen/_5sdp"
+    android:layout_marginHorizontal="@dimen/_10sdp"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="@dimen/_5sdp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/custom_recycler_name"
+            style="@style/text_13_match_bold"/>
+
+        <TextView
+            android:id="@+id/custom_recycler_email"
+            style="@style/text_13_match"/>
+
+        <TextView
+            android:id="@+id/custom_recycler_contact"
+            style="@style/text_13_match"/>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

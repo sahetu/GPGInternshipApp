@@ -53,4 +53,10 @@
         app:backgroundTint="@color/blue"
         android:text= "User Data With Listview" />
 
+    <Button
+        android:id="@+id/main_recycler"
+        style="@style/button_15"
+        app:backgroundTint="@color/yellow"
+        android:text= "User Data With Recyclerview" />
+
 </LinearLayout>

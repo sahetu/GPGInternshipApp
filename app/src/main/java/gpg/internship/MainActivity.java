@@ -21,7 +21,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button login, signup,usersList;
+    Button login, signup,usersList,recyclerButton;
     public static EditText username, password;
     SQLiteDatabase db;
     SharedPreferences sp;
@@ -39,6 +39,15 @@ public class MainActivity extends AppCompatActivity {
 
         username = findViewById(R.id.main_username);
         password = findViewById(R.id.main_password);
+
+        recyclerButton = findViewById(R.id.main_recycler);
+        recyclerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SqliteRecyclerActivity.class);
+                startActivity(intent);
+            }
+        });
 
         usersList = findViewById(R.id.main_user);
 
