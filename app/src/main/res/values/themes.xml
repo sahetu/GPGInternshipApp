@@ -8,11 +8,13 @@
 
     <style name="Theme.GPGInternshipApp" parent="Base.Theme.GPGInternshipApp" />
 
+    <style name="bottom_style" parent="Theme.AppCompat.DayNight.DarkActionBar"/>
+
     <style name="bg_style">
         <item name="android:background">@color/white</item>
     </style>
 
-    <style name="edit_15" parent="Widget.AppCompat.EditText" >
+    <style name="edit_15" parent="Widget.AppCompat.EditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginHorizontal">@dimen/_20sdp</item>
@@ -55,5 +57,14 @@
         <item name="android:textSize">@dimen/_15sdp</item>
         <item name="android:textColor">@color/black_40</item>
     </style>
+
+    <style name="Theme.GPGInternshipApp.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.GPGInternshipApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.GPGInternshipApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>
