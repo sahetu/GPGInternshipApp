@@ -2,8 +2,12 @@ package gpg.internship;
 
 public class ConstantSp {
 
-    public static final String BASE_URL = "http://192.168.1.114/Internship_january_off/";
+    public static final String BASE_URL = "http://192.168.1.83/Internship_january_off/";
     public static final String SIGNUP_URL = BASE_URL+"signup.php";
+    public static final String LOGIN_URL = BASE_URL+"login.php";
+    public static final String UPDATE_URL = BASE_URL+"updateProfile.php";
+    public static final String DELETE_URL = BASE_URL+"deleteProfile.php";
+    public static final String GETDATA_URL = BASE_URL+"getAllData.php";
 
     public static final String PREF = "pref";
     public static final String USERID = "userid";

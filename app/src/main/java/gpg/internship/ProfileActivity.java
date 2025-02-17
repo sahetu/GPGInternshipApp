@@ -1,11 +1,13 @@
 package gpg.internship;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +22,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -77,12 +84,13 @@ public class ProfileActivity extends AppCompatActivity {
                 builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        String deleteQuery = "DELETE FROM USERS WHERE USERID='"+sp.getString(ConstantSp.USERID,"")+"'";
-                        db.execSQL(deleteQuery);
-                        sp.edit().clear().commit();
-                        Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
+                        //doSqliteDelete();
+                        if(new ConnectionDetector(ProfileActivity.this).networkConnected()){
+                            new doDelete().execute();
+                        }
+                        else{
+                            new ConnectionDetector(ProfileActivity.this).networkDisconnected();
+                        }
                     }
                 });
 
@@ -175,30 +183,13 @@ public class ProfileActivity extends AppCompatActivity {
                     Toast.makeText(ProfileActivity.this, "Please Select Gender", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    String updateQuery = "UPDATE USERS SET FIRSTNAME='"+firstName.getText().toString()+"',LASTNAME='"+lastName.getText().toString()+"',EMAIL='"+email.getText().toString()+"',CONTACT='"+contact.getText().toString()+"',PASSWORD='"+password.getText().toString()+"',GENDER='"+sGender+"' WHERE USERID='"+sp.getString(ConstantSp.USERID,"")+"'";
-                    db.execSQL(updateQuery);
-                    Toast.makeText(ProfileActivity.this, "Profile Update Successfully", Toast.LENGTH_SHORT).show();
-
-                    sp.edit().putString(ConstantSp.FIRSTNAME,firstName.getText().toString()).commit();
-                    sp.edit().putString(ConstantSp.LASTNAME,lastName.getText().toString()).commit();
-                    sp.edit().putString(ConstantSp.EMAIL,email.getText().toString()).commit();
-                    sp.edit().putString(ConstantSp.CONTACT,contact.getText().toString()).commit();
-                    sp.edit().putString(ConstantSp.PASSWORD,password.getText().toString()).commit();
-                    sp.edit().putString(ConstantSp.GENDER,sGender).commit();
-
-                    setData(false);
-
-                    /*String selectQuery = "SELECT * FROM USERS WHERE EMAIL='"+email.getText().toString()+"' OR CONTACT='"+contact.getText().toString()+"'";
-                    Cursor cursor = db.rawQuery(selectQuery,null);
-                    if(cursor.getCount()>0){
-                        Toast.makeText(ProfileActivity.this, "Email Id/Contact No. ALready Exists", Toast.LENGTH_SHORT).show();
+                    //doSqliteUpdate();
+                    if(new ConnectionDetector(ProfileActivity.this).networkConnected()){
+                        new doUpdate().execute();
                     }
                     else{
-                        String insertQuery = "INSERT INTO USERS VALUES (NULL,'"+firstName.getText().toString()+"','"+lastName.getText().toString()+"','"+email.getText().toString()+"','"+contact.getText().toString()+"','"+password.getText().toString()+"','"+sGender+"')";
-                        db.execSQL(insertQuery);
-                        Toast.makeText(ProfileActivity.this, "Signup Successfully", Toast.LENGTH_SHORT).show();
-                        onBackPressed();
-                    }*/
+                        new ConnectionDetector(ProfileActivity.this).networkDisconnected();
+                    }
                 }
             }
         });
@@ -212,6 +203,30 @@ public class ProfileActivity extends AppCompatActivity {
 
         setData(false);
 
+    }
+
+    private void doSqliteDelete() {
+        String deleteQuery = "DELETE FROM USERS WHERE USERID='"+sp.getString(ConstantSp.USERID,"")+"'";
+        db.execSQL(deleteQuery);
+        sp.edit().clear().commit();
+        Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void doSqliteUpdate() {
+        String updateQuery = "UPDATE USERS SET FIRSTNAME='"+firstName.getText().toString()+"',LASTNAME='"+lastName.getText().toString()+"',EMAIL='"+email.getText().toString()+"',CONTACT='"+contact.getText().toString()+"',PASSWORD='"+password.getText().toString()+"',GENDER='"+sGender+"' WHERE USERID='"+sp.getString(ConstantSp.USERID,"")+"'";
+        db.execSQL(updateQuery);
+        Toast.makeText(ProfileActivity.this, "Profile Update Successfully", Toast.LENGTH_SHORT).show();
+
+        sp.edit().putString(ConstantSp.FIRSTNAME,firstName.getText().toString()).commit();
+        sp.edit().putString(ConstantSp.LASTNAME,lastName.getText().toString()).commit();
+        sp.edit().putString(ConstantSp.EMAIL,email.getText().toString()).commit();
+        sp.edit().putString(ConstantSp.CONTACT,contact.getText().toString()).commit();
+        sp.edit().putString(ConstantSp.PASSWORD,password.getText().toString()).commit();
+        sp.edit().putString(ConstantSp.GENDER,sGender).commit();
+
+        setData(false);
     }
 
     private void setData(boolean b) {
@@ -253,4 +268,99 @@ public class ProfileActivity extends AppCompatActivity {
 
         }
     }
+
+    private class doUpdate extends AsyncTask<String,String,String> {
+
+        ProgressDialog pd;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(ProfileActivity.this);
+            pd.setMessage("Please Wait...");
+            pd.setCancelable(false);
+            pd.show();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            HashMap<String,String> hashMap = new HashMap<>();
+            hashMap.put("firstname",firstName.getText().toString());
+            hashMap.put("lastname",lastName.getText().toString());
+            hashMap.put("email",email.getText().toString());
+            hashMap.put("contact",contact.getText().toString());
+            hashMap.put("password",password.getText().toString());
+            hashMap.put("gender",sGender);
+            hashMap.put("userid",sp.getString(ConstantSp.USERID,""));
+            return new MakeServiceCall().MakeServiceCall(ConstantSp.UPDATE_URL,MakeServiceCall.POST,hashMap);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            pd.dismiss();
+            try {
+                JSONObject object = new JSONObject(s);
+                if(object.getBoolean("status")){
+                    Toast.makeText(ProfileActivity.this, object.getString("message"), Toast.LENGTH_SHORT).show();
+                    sp.edit().putString(ConstantSp.FIRSTNAME,firstName.getText().toString()).commit();
+                    sp.edit().putString(ConstantSp.LASTNAME,lastName.getText().toString()).commit();
+                    sp.edit().putString(ConstantSp.EMAIL,email.getText().toString()).commit();
+                    sp.edit().putString(ConstantSp.CONTACT,contact.getText().toString()).commit();
+                    sp.edit().putString(ConstantSp.PASSWORD,password.getText().toString()).commit();
+                    sp.edit().putString(ConstantSp.GENDER,sGender).commit();
+
+                    setData(false);
+                }
+                else{
+                    Toast.makeText(ProfileActivity.this, object.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private class doDelete extends AsyncTask<String,String,String> {
+
+        ProgressDialog pd;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(ProfileActivity.this);
+            pd.setMessage("Please Wait...");
+            pd.setCancelable(false);
+            pd.show();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            HashMap<String,String> hashMap = new HashMap<>();
+            hashMap.put("userid",sp.getString(ConstantSp.USERID,""));
+            return new MakeServiceCall().MakeServiceCall(ConstantSp.DELETE_URL,MakeServiceCall.POST,hashMap);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            pd.dismiss();
+            try {
+                JSONObject object = new JSONObject(s);
+                if(object.getBoolean("status")){
+                    Toast.makeText(ProfileActivity.this, object.getString("message"), Toast.LENGTH_SHORT).show();
+                    sp.edit().clear().commit();
+                    Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else{
+                    Toast.makeText(ProfileActivity.this, object.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
 }
