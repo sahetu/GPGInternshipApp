@@ -9,6 +9,8 @@ public class ConstantSp {
     public static final String DELETE_URL = BASE_URL+"deleteProfile.php";
     public static final String GETDATA_URL = BASE_URL+"getAllData.php";
 
+    public static final String SERVER_ERROR = "Server Error Code : ";
+
     public static final String PREF = "pref";
     public static final String USERID = "userid";
     public static final String FIRSTNAME = "firstname";
