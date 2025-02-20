@@ -23,17 +23,25 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class SqliteRecyclerActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     SQLiteDatabase db;
     ArrayList<CustomList> arrayList;
+    ApiInterface apiInterface;
+    ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sqlite_recycler);
 
+        apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        
         db = openOrCreateDatabase("GPGApp.db", MODE_PRIVATE, null);
         String tableQuery = "CREATE TABLE IF NOT EXISTS USERS(USERID INTEGER PRIMARY KEY AUTOINCREMENT,FIRSTNAME VARCHAR(50),LASTNAME VARCHAR(50),EMAIL VARCHAR(100),CONTACT INT(10),PASSWORD VARCHAR(20),GENDER VARCHAR(20))";
         db.execSQL(tableQuery);
@@ -45,7 +53,12 @@ public class SqliteRecyclerActivity extends AppCompatActivity {
 
         //doSqliteData();
         if(new ConnectionDetector(SqliteRecyclerActivity.this).networkConnected()){
-            new getData().execute();
+            //new getData().execute();
+            pd = new ProgressDialog(SqliteRecyclerActivity.this);
+            pd.setMessage("Please Wait...");
+            pd.setCancelable(false);
+            pd.show();
+            getDataRetrofit();
         }
         else{
             new ConnectionDetector(SqliteRecyclerActivity.this).networkDisconnected();
@@ -53,6 +66,45 @@ public class SqliteRecyclerActivity extends AppCompatActivity {
 
     }
 
+    private void getDataRetrofit() {
+        Call<GetLoginData> call = apiInterface.getAllData();
+        call.enqueue(new Callback<GetLoginData>() {
+            @Override
+            public void onResponse(Call<GetLoginData> call, Response<GetLoginData> response) {
+                pd.dismiss();
+                if(response.code()==200){
+                    if(response.body().status){
+                        arrayList = new ArrayList<>();
+                        for (int i=0;i<response.body().userDetails.size();i++){
+                            CustomList list = new CustomList();
+                            list.setUserId(response.body().userDetails.get(i).userId);
+                            list.setFirstName(response.body().userDetails.get(i).firstname);
+                            list.setLastName(response.body().userDetails.get(i).lastname);
+                            list.setEmail(response.body().userDetails.get(i).email);
+                            list.setContact(response.body().userDetails.get(i).contact);
+                            list.setGender(response.body().userDetails.get(i).gender);
+                            arrayList.add(list);
+                        }
+                        UserRecyclerAdapter adapter = new UserRecyclerAdapter(SqliteRecyclerActivity.this,arrayList);
+                        recyclerView.setAdapter(adapter);
+                    }
+                    else{
+                        Toast.makeText(SqliteRecyclerActivity.this, response.body().message, Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else{
+                    Toast.makeText(SqliteRecyclerActivity.this, ConstantSp.SERVER_ERROR+response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetLoginData> call, Throwable t) {
+                pd.dismiss();
+                Toast.makeText(SqliteRecyclerActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    
     private void doSqliteData() {
         String loginQuery = "SELECT * FROM USERS ORDER BY USERID DESC";
         Cursor cursor = db.rawQuery(loginQuery,null);

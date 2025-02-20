@@ -28,6 +28,10 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class ProfileActivity extends AppCompatActivity {
 
     EditText firstName,lastName,email,contact,password,confirmPassword;
@@ -41,11 +45,16 @@ public class ProfileActivity extends AppCompatActivity {
     String sGender;
     SharedPreferences sp;
     
+    ApiInterface apiInterface;
+    ProgressDialog pd;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
+        
+        apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        
         sp = getSharedPreferences(ConstantSp.PREF,MODE_PRIVATE);
 
         db = openOrCreateDatabase("GPGApp.db",MODE_PRIVATE,null);
@@ -86,7 +95,12 @@ public class ProfileActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //doSqliteDelete();
                         if(new ConnectionDetector(ProfileActivity.this).networkConnected()){
-                            new doDelete().execute();
+                            //new doDelete().execute();
+                            pd = new ProgressDialog(ProfileActivity.this);
+                            pd.setMessage("Please Wait...");
+                            pd.setCancelable(false);
+                            pd.show();
+                            doDeleteRetrofit();
                         }
                         else{
                             new ConnectionDetector(ProfileActivity.this).networkDisconnected();
@@ -185,7 +199,12 @@ public class ProfileActivity extends AppCompatActivity {
                 else{
                     //doSqliteUpdate();
                     if(new ConnectionDetector(ProfileActivity.this).networkConnected()){
-                        new doUpdate().execute();
+                        //new doUpdate().execute();
+                        pd = new ProgressDialog(ProfileActivity.this);
+                        pd.setMessage("Please Wait...");
+                        pd.setCancelable(false);
+                        pd.show();
+                        doUpdateRetrofit();
                     }
                     else{
                         new ConnectionDetector(ProfileActivity.this).networkDisconnected();
@@ -203,6 +222,84 @@ public class ProfileActivity extends AppCompatActivity {
 
         setData(false);
 
+    }
+
+    private void doDeleteRetrofit() {
+        Call<GetSignupData> call = apiInterface.deleteProfileData(
+                sp.getString(ConstantSp.USERID,"")
+        );
+
+        call.enqueue(new Callback<GetSignupData>() {
+            @Override
+            public void onResponse(Call<GetSignupData> call, Response<GetSignupData> response) {
+                pd.dismiss();
+                if(response.code()==200){
+                    if(response.body().status){
+                        Toast.makeText(ProfileActivity.this, response.body().message, Toast.LENGTH_SHORT).show();
+                        sp.edit().clear().commit();
+                        Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                    else{
+                        Toast.makeText(ProfileActivity.this, response.body().message, Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else{
+                    Toast.makeText(ProfileActivity.this, ConstantSp.SERVER_ERROR+response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetSignupData> call, Throwable t) {
+                pd.dismiss();
+                Toast.makeText(ProfileActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void doUpdateRetrofit() {
+        Call<GetSignupData> call = apiInterface.updateProfileData(
+                firstName.getText().toString(),
+                lastName.getText().toString(),
+                email.getText().toString(),
+                contact.getText().toString(),
+                password.getText().toString(),
+                sGender,
+                sp.getString(ConstantSp.USERID,"")
+        );
+
+        call.enqueue(new Callback<GetSignupData>() {
+            @Override
+            public void onResponse(Call<GetSignupData> call, Response<GetSignupData> response) {
+                pd.dismiss();
+                if(response.code()==200){
+                    if(response.body().status){
+                        Toast.makeText(ProfileActivity.this, response.body().message, Toast.LENGTH_SHORT).show();
+                        sp.edit().putString(ConstantSp.FIRSTNAME,firstName.getText().toString()).commit();
+                        sp.edit().putString(ConstantSp.LASTNAME,lastName.getText().toString()).commit();
+                        sp.edit().putString(ConstantSp.EMAIL,email.getText().toString()).commit();
+                        sp.edit().putString(ConstantSp.CONTACT,contact.getText().toString()).commit();
+                        sp.edit().putString(ConstantSp.PASSWORD,password.getText().toString()).commit();
+                        sp.edit().putString(ConstantSp.GENDER,sGender).commit();
+
+                        setData(false);
+                    }
+                    else{
+                        Toast.makeText(ProfileActivity.this, response.body().message, Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else{
+                    Toast.makeText(ProfileActivity.this, ConstantSp.SERVER_ERROR+response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetSignupData> call, Throwable t) {
+                pd.dismiss();
+                Toast.makeText(ProfileActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void doSqliteDelete() {
