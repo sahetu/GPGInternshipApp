@@ -132,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
                             String sContact = response.body().userDetails.get(i).contact;
                             String sPassword = "";
                             String sGender = response.body().userDetails.get(i).gender;
+                            String sProfile = response.body().userDetails.get(i).profile;
 
                             sp.edit().putString(ConstantSp.USERID,sUserId).commit();
                             sp.edit().putString(ConstantSp.FIRSTNAME,sFirstName).commit();
@@ -140,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
                             sp.edit().putString(ConstantSp.CONTACT,sContact).commit();
                             sp.edit().putString(ConstantSp.PASSWORD,sPassword).commit();
                             sp.edit().putString(ConstantSp.GENDER,sGender).commit();
+                            sp.edit().putString(ConstantSp.PROFILE_IMAGE,sProfile).commit();
                         }
                         Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
                         startActivity(intent);
