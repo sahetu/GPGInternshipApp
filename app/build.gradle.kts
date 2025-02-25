@@ -58,6 +58,8 @@ dependencies {
     implementation(libs.coil)
     implementation(libs.circleimage)
 
+    implementation(libs.razorpay)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

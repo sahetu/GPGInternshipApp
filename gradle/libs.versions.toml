@@ -19,6 +19,7 @@ convertorgson = "2.9.0"
 fishbun = "1.1.1"
 coil = "0.11.0"
 circleimage = "3.1.0"
+razorpay = "1.6.20"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -40,6 +41,7 @@ convertorgson = { group="com.squareup.retrofit2", name="converter-gson", version
 fishbun = {group = "io.github.sangcomz", name = "fishbun", version.ref = "fishbun"}
 coil = {group = "io.coil-kt", name = "coil", version.ref = "coil" }
 circleimage = {group = "de.hdodenhof", name = "circleimageview", version.ref = "circleimage"}
+razorpay = {group="com.razorpay", name="checkout", version.ref = "razorpay"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
