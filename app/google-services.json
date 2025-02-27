@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "942830203789",
+    "project_id": "final-year-internship",
+    "storage_bucket": "final-year-internship.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:942830203789:android:94191c0fd3e885528ac3c4",
+        "android_client_info": {
+          "package_name": "ecommerce.on"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrQbunsu2lq_e_V8Z-PTH8-ct3NK9xLks"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:942830203789:android:c704f9c9cee32b3b8ac3c4",
+        "android_client_info": {
+          "package_name": "gpg.internship"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrQbunsu2lq_e_V8Z-PTH8-ct3NK9xLks"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

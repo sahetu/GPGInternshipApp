@@ -21,4 +21,6 @@ public class ConstantSp {
     public static final String GENDER = "gender";
     public static final String PROFILE_IMAGE = "profile_image";
 
+    public static final String FCM_ID = "fcm_id";
+
 }
